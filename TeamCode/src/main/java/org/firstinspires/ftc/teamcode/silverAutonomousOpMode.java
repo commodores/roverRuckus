@@ -144,6 +144,11 @@ public class silverAutonomousOpMode extends LinearOpMode {
 
             // rotate to unhook
             rotate(17, TURN_SPEED);
+            sleep(1000);
+
+            // move to clear hook
+            driveGyro(DRIVE_SPEED, 5);
+            sleep(1000);
 
             // sit pretty
             while (runtime.seconds() < 30.0)

@@ -145,6 +145,18 @@ public class goldAutonomousOpMode extends LinearOpMode {
             // rotate to unhook
             rotate(17, TURN_SPEED);
 
+            //drive away from lander
+            driveGyro(DRIVE_SPEED, 44);
+
+            //rotate to cater
+            rotate(45, TURN_SPEED);
+            sleep(1000);
+
+            //drive over and drop arm within cater
+            driveGyro(DRIVE_SPEED,55);
+            //armMotor.setPower(.75);
+            sleep(500);
+
             // sit pretty
             while (runtime.seconds() < 30.0)
             {
