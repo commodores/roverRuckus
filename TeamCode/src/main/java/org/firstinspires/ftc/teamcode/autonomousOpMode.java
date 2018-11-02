@@ -148,9 +148,17 @@ public class autonomousOpMode extends LinearOpMode
             // rotate to unhook
             rotate(17, TURN_SPEED);
 
+            // drive away
+            driveGyro(DRIVE_SPEED, 38);
+
             // sit pretty
             while (runtime.seconds() < 30.0)
             {
+                armMotor.setPower(0);
+                leftElevatorMotor.setPosition(0.5);
+                rightElevatorMotor.setPosition(0.5);
+                leftMotor.setPower(0.0);
+                rightMotor.setPower(0.0);
                 telemetry.addData("Path", "Complete");
                 telemetry.update();
             }

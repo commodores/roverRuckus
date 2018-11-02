@@ -43,7 +43,7 @@ public class goldAutonomousOpMode extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.5;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
 
     // called when init button is  pressed.
@@ -146,23 +146,42 @@ public class goldAutonomousOpMode extends LinearOpMode {
             rotate(17, TURN_SPEED);
 
             //drive away from lander
-            driveGyro(DRIVE_SPEED, 44);
+            driveGyro(DRIVE_SPEED, 38);
 
             //rotate to cater
-            rotate(45, TURN_SPEED);
+            rotate(-41, TURN_SPEED);
+
+            // drive over and drop arm within cater
+            driveGyro(DRIVE_SPEED,13);
+            armMotor.setPower(.50);
+            sleep(2500);
+            armMotor.setPower(0);
+
+            // lower elevator
+            leftElevatorMotor.setPosition(1);
+            rightElevatorMotor.setPosition(0);
+            sleep(1000);
+            leftElevatorMotor.setPosition(0.5);
+            rightElevatorMotor.setPosition(0.5);
             sleep(1000);
 
-            //drive over and drop arm within cater
-            driveGyro(DRIVE_SPEED,55);
-            //armMotor.setPower(.75);
-            sleep(500);
+            // back to toward
+            armMotor.setPower(-.50);
+            sleep(1500);
+            armMotor.setPower(0);
+            driveGyro(DRIVE_SPEED,-50);
 
             // sit pretty
-            while (runtime.seconds() < 30.0)
-            {
+            while (runtime.seconds() <  30.00) {
+                armMotor.setPower(0);
+                leftElevatorMotor.setPosition(0.5);
+                rightElevatorMotor.setPosition(0.5);
+                leftMotor.setPower(0.0);
+                rightMotor.setPower(0.0);
                 telemetry.addData("Path", "Complete");
                 telemetry.update();
             }
+
 
 
             //Turn 45 degree angle, get away.
