@@ -154,7 +154,7 @@ public class autonomousOpMode extends LinearOpMode
             rightMotor.setPower(0);
 
             wait(60000);
-
+  
             // sit pretty
             while (runtime.seconds() < 45.0)
             {
