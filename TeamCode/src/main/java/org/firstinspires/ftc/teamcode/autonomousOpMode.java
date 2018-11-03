@@ -46,7 +46,7 @@ public class autonomousOpMode extends LinearOpMode
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.4;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
 
     // called when init button is  pressed.
@@ -149,10 +149,14 @@ public class autonomousOpMode extends LinearOpMode
             rotate(17, TURN_SPEED);
 
             // drive away
-            driveGyro(DRIVE_SPEED, 38);
+            //driveGyro(DRIVE_SPEED, 30);
+            leftMotor.setPower(0);
+            rightMotor.setPower(0);
+
+            wait(60000);
 
             // sit pretty
-            while (runtime.seconds() < 30.0)
+            while (runtime.seconds() < 45.0)
             {
                 armMotor.setPower(0);
                 leftElevatorMotor.setPosition(0.5);
