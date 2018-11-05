@@ -149,12 +149,12 @@ public class autonomousOpMode extends LinearOpMode
             rotate(17, TURN_SPEED);
 
             // drive away
-            //driveGyro(DRIVE_SPEED, 30);
+            driveGyro(DRIVE_SPEED, 30);
             leftMotor.setPower(0);
             rightMotor.setPower(0);
 
-            wait(60000);
-  
+            sleep(60000);
+
             // sit pretty
             while (runtime.seconds() < 45.0)
             {
