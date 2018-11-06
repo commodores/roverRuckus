@@ -148,7 +148,7 @@ public class silverAutonomousOpMode extends LinearOpMode {
 
             // move to clear hook
             driveGyro(DRIVE_SPEED, 5);
-            sleep(1000);
+            sleep(30000);
 
             // sit pretty
             while (runtime.seconds() < 30.0)

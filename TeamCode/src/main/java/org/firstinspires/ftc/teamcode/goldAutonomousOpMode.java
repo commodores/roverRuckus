@@ -171,6 +171,7 @@ public class goldAutonomousOpMode extends LinearOpMode {
             armMotor.setPower(0);
             driveGyro(DRIVE_SPEED,-50);
 
+
             // sit pretty
             while (runtime.seconds() <  30.00) {
                 armMotor.setPower(0);
