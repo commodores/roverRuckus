@@ -69,8 +69,8 @@ public class teleopOpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             // driving is from gamepad1 sticks
-            leftPower = -this.gamepad1.left_stick_y;
-            rightPower = -this.gamepad1.right_stick_y;
+            leftPower = -this.gamepad1.right_stick_y;
+            rightPower = -this.gamepad1.left_stick_y;
             leftMotor.setPower(leftPower);
             rightMotor.setPower(rightPower);
 
