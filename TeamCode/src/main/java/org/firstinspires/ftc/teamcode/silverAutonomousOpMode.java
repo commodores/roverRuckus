@@ -31,6 +31,7 @@ public class silverAutonomousOpMode extends LinearOpMode {
     private Servo landerServo;
     private Servo leftArmServo;
     private Servo rightArmServo;
+    private Servo markerServo;
 
     private Orientation lastAngles = new Orientation();
     double globalAngle, correction;
@@ -63,6 +64,7 @@ public class silverAutonomousOpMode extends LinearOpMode {
         landerServo = hardwareMap.get(Servo.class, "landerServo");
         leftArmServo = hardwareMap.get(Servo.class,"leftArmServo");
         rightArmServo = hardwareMap.get(Servo.class,"rightArmServo");
+        markerServo = hardwareMap.get(Servo.class,"markerServo");
 
         // setup Motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);

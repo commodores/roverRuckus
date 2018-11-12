@@ -21,6 +21,7 @@ public class teleopOpMode extends LinearOpMode {
     private Servo landerServo;
     private Servo leftArmServo;
     private Servo rightArmServo;
+    private Servo markerServo;
 
     @Override
     public void runOpMode() {
@@ -34,6 +35,7 @@ public class teleopOpMode extends LinearOpMode {
         landerServo = hardwareMap.get(Servo.class, "landerServo");
         leftArmServo = hardwareMap.get(Servo.class,"leftArmServo");
         rightArmServo = hardwareMap.get(Servo.class,"rightArmServo");
+        markerServo = hardwareMap.get(Servo.class,"markerServo");
 
         // setup Motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -67,16 +69,17 @@ public class teleopOpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             // driving is from gamepad1 sticks
-            leftPower = -this.gamepad1.left_stick_y;
-            rightPower = -this.gamepad1.right_stick_y;
+            leftPower = this.gamepad1.left_stick_y;
+            rightPower = this.gamepad1.right_stick_y;
             leftMotor.setPower(leftPower);
             rightMotor.setPower(rightPower);
 
             // arm is controlled by the gamepad2 triggers
-            armPower = gamepad2.right_trigger * .6;
+            armPower = gamepad2.right_trigger * .75;
+
             // if the left trigger is pressed, reverse
             if (gamepad2.left_trigger != 0.0 && gamepad2.right_trigger == 0.0) {
-                armPower = -gamepad2.left_trigger * .6;
+                armPower = -gamepad2.left_trigger * .75;
             }
             armMotor.setPower(armPower);
 
@@ -99,6 +102,12 @@ public class teleopOpMode extends LinearOpMode {
                 landerServo.setPosition(0);
             } else {
                 landerServo.setPosition(0.25);
+            }
+            // marker deploy
+            if (gamepad1.left_bumper) {
+                markerServo.setPosition(0);
+            } else {
+                markerServo.setPosition(0.5);
             }
 
             // extend the basket
