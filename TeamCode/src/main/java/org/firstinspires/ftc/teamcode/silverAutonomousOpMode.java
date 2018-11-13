@@ -47,7 +47,9 @@ public class silverAutonomousOpMode extends LinearOpMode
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 1.0;     // Nominal speed for better accuracy.
+    static final double     FAST_DRIVE_SPEED             = 1.0;
+    static final double     MEDIUM_DRIVE_SPEED             = .75;
+    static final double     SLOW_DRIVE_SPEED             = .5;
     static final double     TURN_SPEED              = 0.75;     // Nominal half speed for better accuracy.
 
     // called when init button is  pressed.
@@ -148,8 +150,8 @@ public class silverAutonomousOpMode extends LinearOpMode
             // drive away
             //driveGyro(DRIVE_SPEED, 30);
 
-            encoderDrive(DRIVE_SPEED, -3, -3, 1.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-            encoderDrive(DRIVE_SPEED, 4, 4, 1.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+            encoderDrive(FAST_DRIVE_SPEED, -10, -10, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+            encoderDrive(FAST_DRIVE_SPEED, 10, 10, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
             // rotate to unhook
             rotate(-35, TURN_SPEED);
