@@ -85,12 +85,12 @@ public class teleopOpMode extends LinearOpMode {
 
             //elevator is controlled by gamepad2 bumpers
             if (gamepad2.right_bumper && !gamepad2.left_bumper && elevatorExtended.getState()) {
-                leftElevatorMotor.setPosition(0);
-                rightElevatorMotor.setPosition(1.0);
+                leftElevatorMotor.setPosition(1.0);
+                rightElevatorMotor.setPosition(0);
             }
             else if (gamepad2.left_bumper && !gamepad2.right_bumper) {
-                leftElevatorMotor.setPosition(1.0);
-                rightElevatorMotor.setPosition(0.0);
+                leftElevatorMotor.setPosition(0);
+                rightElevatorMotor.setPosition(1.0);
             }
             else {
                 leftElevatorMotor.setPosition(0.5);

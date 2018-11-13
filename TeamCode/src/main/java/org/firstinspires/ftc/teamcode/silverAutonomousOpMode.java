@@ -1,3 +1,6 @@
+// This is our first try generating an autonomous program
+// Hope it works!
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -14,10 +17,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name="SilverAutonomous", group="Commodores")
+@Autonomous(name="Silver Auto", group="Commodores")
 //@Disabled
-
-public class silverAutonomousOpMode extends LinearOpMode {
+public class silverAutonomousOpMode extends LinearOpMode
+{
     //Sensors
     private BNO055IMU imu;
     private DigitalChannel elevatorExtended;
@@ -38,14 +41,14 @@ public class silverAutonomousOpMode extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 537.6 ;    // REV 20:1 Planetary Gearbox
-    static final double     DRIVE_GEAR_REDUCTION    = 1.5 ;     // This is < 1.0 if geared UP
+    static final double     DRIVE_GEAR_REDUCTION    = .5 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 3.54331;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 1.0;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.75;     // Nominal half speed for better accuracy.
 
     // called when init button is  pressed.
     @Override
@@ -83,6 +86,9 @@ public class silverAutonomousOpMode extends LinearOpMode {
 
         // hold robot up
         landerServo.setPosition(0);
+
+        // hold marker up
+        markerServo.setPosition(0.5);
 
         // ensure basket is retracted
         leftArmServo.setPosition(0.17);
@@ -127,50 +133,36 @@ public class silverAutonomousOpMode extends LinearOpMode {
         // drive until end of period.
         while (opModeIsActive())
         {
-            telemetry.addData("1 imu heading", lastAngles.firstAngle);
-            telemetry.addData("2 global heading", globalAngle);
-            telemetry.addData("3 correction", correction);
-            telemetry.update();
-
             // release elevator
             landerServo.setPosition(0.25);
             sleep(1000);
 
             // lower robot
-            leftElevatorMotor.setPosition(0);
-            rightElevatorMotor.setPosition(1.0);
-            sleep(500);
+            leftElevatorMotor.setPosition(1.0);
+            rightElevatorMotor.setPosition(0);
+            sleep(600);
             leftElevatorMotor.setPosition(0.5);
             rightElevatorMotor.setPosition(0.5);
             sleep(1000);
 
-            // rotate to unhook
-            rotate(17, TURN_SPEED);
-            sleep(1000);
+            // drive away
+            //driveGyro(DRIVE_SPEED, 30);
 
-            // move to clear hook
-            driveGyro(DRIVE_SPEED, 5);
-            sleep(30000);
+            encoderDrive(DRIVE_SPEED, -3, -3, 1.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+            encoderDrive(DRIVE_SPEED, 4, 4, 1.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+
+            // rotate to unhook
+            rotate(-35, TURN_SPEED);
 
             // sit pretty
-            while (runtime.seconds() < 30.0)
-            {
-                telemetry.addData("Path", "Complete");
-                telemetry.update();
-            }
-
-
-            //Turn 45 degree angle, get away.
-
-            //rotate(45, TURN_SPEED);
-            //driveGyro(DRIVE_SPEED, 44.0);
-
-            //Turn 90 degree angle and drop marker.
-            //rotate(-90,TURN_SPEED);
-            //driveGyro(DRIVE_SPEED, 28.0);
-            //armMotor.setPower(1);
-            //Drive across cater line.
-            //driveGyro(DRIVE_SPEED, 70);
+            armMotor.setPower(0);
+            leftElevatorMotor.setPosition(0.5);
+            rightElevatorMotor.setPosition(0.5);
+            leftMotor.setPower(0.0);
+            rightMotor.setPower(0.0);
+            telemetry.addData("Path", "Complete");
+            telemetry.update();
+            sleep(30000);
         }
     }
 
@@ -250,13 +242,13 @@ public class silverAutonomousOpMode extends LinearOpMode {
 
         if (degrees < 0)
         {   // turn right.
-            leftPower = power;
-            rightPower = -power;
+            leftPower = -power;
+            rightPower = power;
         }
         else if (degrees > 0)
         {   // turn left.
-            leftPower = -power;
-            rightPower = power;
+            leftPower = power;
+            rightPower = -power;
         }
         else return;
 
@@ -339,6 +331,59 @@ public class silverAutonomousOpMode extends LinearOpMode {
             // Turn off RUN_TO_POSITION
             leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+    }
+
+    public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS)
+    {
+        int newLeftTarget;
+        int newRightTarget;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget = leftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightTarget = rightMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            leftMotor.setTargetPosition(newLeftTarget);
+            rightMotor.setTargetPosition(newRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            leftMotor.setPower(Math.abs(speed));
+            rightMotor.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+                telemetry.addData("Path2",  "Running at %7d :%7d",
+                        leftMotor.getCurrentPosition(),
+                        rightMotor.getCurrentPosition());
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            leftMotor.setPower(0);
+            rightMotor.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            //  sleep(250);   // optional pause after each move
         }
     }
 }

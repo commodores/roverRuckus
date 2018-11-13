@@ -47,8 +47,8 @@ public class autonomousOpMode extends LinearOpMode
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 1.0;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.75;     // Nominal half speed for better accuracy.
 
     // called when init button is  pressed.
     @Override
@@ -135,21 +135,21 @@ public class autonomousOpMode extends LinearOpMode
             sleep(1000);
 
             // lower robot
-            leftElevatorMotor.setPosition(0);
-            rightElevatorMotor.setPosition(1.0);
-            sleep(500);
+            leftElevatorMotor.setPosition(1.0);
+            rightElevatorMotor.setPosition(0);
+            sleep(600);
             leftElevatorMotor.setPosition(0.5);
             rightElevatorMotor.setPosition(0.5);
             sleep(1000);
 
-            // rotate to unhook
-            rotate(17, TURN_SPEED);
-
             // drive away
             //driveGyro(DRIVE_SPEED, 30);
 
-            encoderDrive(DRIVE_SPEED,  24,  24, 4.0);  // S1: Forward 47 Inches with 5 Sec timeout
-            encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+            encoderDrive(DRIVE_SPEED, -3, -3, 1.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+            encoderDrive(DRIVE_SPEED, 4, 4, 1.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+
+            // rotate to unhook
+            rotate(-35, TURN_SPEED);
 
             // sit pretty
             armMotor.setPower(0);
@@ -239,13 +239,13 @@ public class autonomousOpMode extends LinearOpMode
 
         if (degrees < 0)
         {   // turn right.
-            leftPower = power;
-            rightPower = -power;
+            leftPower = -power;
+            rightPower = power;
         }
         else if (degrees > 0)
         {   // turn left.
-            leftPower = -power;
-            rightPower = power;
+            leftPower = power;
+            rightPower = -power;
         }
         else return;
 
