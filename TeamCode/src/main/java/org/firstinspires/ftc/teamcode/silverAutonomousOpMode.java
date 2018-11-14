@@ -49,7 +49,7 @@ public class silverAutonomousOpMode extends LinearOpMode
     // The can/should be tweaked to suite the specific robot drive train.
     static final double     FAST_DRIVE_SPEED             = 1.0;
     static final double     MEDIUM_DRIVE_SPEED             = .75;
-    static final double     SLOW_DRIVE_SPEED             = .5;
+    static final double     SLOW_DRIVE_SPEED             = .2;
     static final double     TURN_SPEED              = 0.75;     // Nominal half speed for better accuracy.
 
     // called when init button is  pressed.
@@ -79,8 +79,8 @@ public class silverAutonomousOpMode extends LinearOpMode
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // brake motors
-        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // set digital channels to input mode.
@@ -150,11 +150,44 @@ public class silverAutonomousOpMode extends LinearOpMode
             // drive away
             //driveGyro(DRIVE_SPEED, 30);
 
-            encoderDrive(FAST_DRIVE_SPEED, -10, -10, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-            encoderDrive(FAST_DRIVE_SPEED, 10, 10, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+            encoderDrive(FAST_DRIVE_SPEED, -7, -7, 2.0);
+            encoderDrive(FAST_DRIVE_SPEED, 7, 7, 2.0);
 
             // rotate to unhook
-            rotate(-35, TURN_SPEED);
+            rotate(-12, TURN_SPEED);
+
+            // lower elevator
+            leftElevatorMotor.setPosition(0);
+            rightElevatorMotor.setPosition(1.0);
+            sleep(650);
+            leftElevatorMotor.setPosition(0.5);
+            rightElevatorMotor.setPosition(0.5);
+            sleep(500);
+
+            // rotate to face wall
+            rotate(-48, TURN_SPEED);
+            sleep(500);
+
+            // drive to wall
+            encoderDrive(SLOW_DRIVE_SPEED, -27, -27, 4.0);
+            sleep(500);
+
+            // rotate to face depot
+            rotate(-50, TURN_SPEED);
+            sleep(500);
+
+            // drive to depot
+            encoderDrive(SLOW_DRIVE_SPEED, 28, 28, 4.0);
+            sleep(500);
+
+            // dump marker
+            markerServo.setPosition(0);
+            sleep(2000);
+            markerServo.setPosition(0.5);
+
+            // drive to park
+            encoderDrive(SLOW_DRIVE_SPEED, -43, -43, 4.0);
+            sleep(500);
 
             // sit pretty
             armMotor.setPower(0);
