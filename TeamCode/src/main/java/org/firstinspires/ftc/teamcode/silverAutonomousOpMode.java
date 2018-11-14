@@ -49,7 +49,7 @@ public class silverAutonomousOpMode extends LinearOpMode
     // The can/should be tweaked to suite the specific robot drive train.
     static final double     FAST_DRIVE_SPEED             = 1.0;
     static final double     MEDIUM_DRIVE_SPEED             = .75;
-    static final double     SLOW_DRIVE_SPEED             = .2;
+    static final double     SLOW_DRIVE_SPEED             = .1;
     static final double     TURN_SPEED              = 0.75;     // Nominal half speed for better accuracy.
 
     // called when init button is  pressed.
@@ -165,11 +165,11 @@ public class silverAutonomousOpMode extends LinearOpMode
             sleep(500);
 
             // rotate to face wall
-            rotate(-48, TURN_SPEED);
+            rotate(-44, TURN_SPEED);
             sleep(500);
 
             // drive to wall
-            encoderDrive(SLOW_DRIVE_SPEED, -27, -27, 4.0);
+            encoderDrive(SLOW_DRIVE_SPEED, -40, -40, 4.0);
             sleep(500);
 
             // rotate to face depot
@@ -177,7 +177,7 @@ public class silverAutonomousOpMode extends LinearOpMode
             sleep(500);
 
             // drive to depot
-            encoderDrive(SLOW_DRIVE_SPEED, 28, 28, 4.0);
+            encoderDrive(SLOW_DRIVE_SPEED, 40, 40, 4.0);
             sleep(500);
 
             // dump marker
@@ -186,7 +186,7 @@ public class silverAutonomousOpMode extends LinearOpMode
             markerServo.setPosition(0.5);
 
             // drive to park
-            encoderDrive(SLOW_DRIVE_SPEED, -43, -43, 4.0);
+            encoderDrive(SLOW_DRIVE_SPEED, -52, -52, 4.0);
             sleep(500);
 
             // sit pretty
