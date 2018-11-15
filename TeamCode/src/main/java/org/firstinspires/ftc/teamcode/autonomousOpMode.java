@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name="Autonomous", group="Commodores")
+@Autonomous(name="Safe Landing Only", group="Commodores")
 //@Disabled
 public class autonomousOpMode extends LinearOpMode
 {
@@ -47,10 +47,11 @@ public class autonomousOpMode extends LinearOpMode
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     FAST_DRIVE_SPEED             = 1.0;
-    static final double     MEDIUM_DRIVE_SPEED             = .75;
-    static final double     SLOW_DRIVE_SPEED             = .5;
-    static final double     TURN_SPEED              = 0.75;     // Nominal half speed for better accuracy.
+    static final double     FAST_DRIVE_SPEED        = 1.0;
+    static final double     MEDIUM_DRIVE_SPEED      = .75;
+    static final double     SLOW_DRIVE_SPEED        = .2;
+    static final double     TURN_SLOW               = 0.5;
+    static final double     TURN_FAST               = 0.75;
 
     // called when init button is  pressed.
     @Override
@@ -79,8 +80,8 @@ public class autonomousOpMode extends LinearOpMode
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // brake motors
-        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // set digital channels to input mode.
@@ -88,6 +89,9 @@ public class autonomousOpMode extends LinearOpMode
 
         // hold robot up
         landerServo.setPosition(0);
+
+        // hold marker up
+        markerServo.setPosition(0.5);
 
         // ensure basket is retracted
         leftArmServo.setPosition(0.17);
@@ -144,14 +148,23 @@ public class autonomousOpMode extends LinearOpMode
             rightElevatorMotor.setPosition(0.5);
             sleep(1000);
 
-            // drive away
-            //driveGyro(DRIVE_SPEED, 30);
-
-            encoderDrive(FAST_DRIVE_SPEED, -10, -10, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-            encoderDrive(FAST_DRIVE_SPEED, 10, 10, 2.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+            encoderDrive(FAST_DRIVE_SPEED, -7, -7, 2.0);
+            encoderDrive(FAST_DRIVE_SPEED, 7, 7, 2.0);
 
             // rotate to unhook
-            rotate(-35, TURN_SPEED);
+            rotate(-12, TURN_FAST);
+
+            // lower elevator
+            leftElevatorMotor.setPosition(0);
+            rightElevatorMotor.setPosition(1.0);
+            sleep(650);
+            leftElevatorMotor.setPosition(0.5);
+            rightElevatorMotor.setPosition(0.5);
+            sleep(500);
+
+            // rotate to face wall
+            rotate(-45, TURN_SLOW);
+            sleep(500);
 
             // sit pretty
             armMotor.setPower(0);
@@ -333,6 +346,13 @@ public class autonomousOpMode extends LinearOpMode
         }
     }
 
+    /**
+     * Drive based on encoder counts
+     * @param speed speed to drive
+     * @param leftInches how far to drive the left motor
+     * @param rightInches how far to drive the right motor
+     * @param timeoutS how long to run the command in case of failure
+     */
     public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS)
     {
         int newLeftTarget;

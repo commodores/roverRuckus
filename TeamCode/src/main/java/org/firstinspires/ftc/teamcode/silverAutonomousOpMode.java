@@ -47,10 +47,11 @@ public class silverAutonomousOpMode extends LinearOpMode
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     FAST_DRIVE_SPEED             = 1.0;
-    static final double     MEDIUM_DRIVE_SPEED             = .75;
-    static final double     SLOW_DRIVE_SPEED             = .1;
-    static final double     TURN_SPEED              = 0.75;     // Nominal half speed for better accuracy.
+    static final double     FAST_DRIVE_SPEED        = 1.0;
+    static final double     MEDIUM_DRIVE_SPEED      = .75;
+    static final double     SLOW_DRIVE_SPEED        = .2;
+    static final double     TURN_SLOW               = 0.5;
+    static final double     TURN_FAST               = 0.75;
 
     // called when init button is  pressed.
     @Override
@@ -147,14 +148,11 @@ public class silverAutonomousOpMode extends LinearOpMode
             rightElevatorMotor.setPosition(0.5);
             sleep(1000);
 
-            // drive away
-            //driveGyro(DRIVE_SPEED, 30);
-
             encoderDrive(FAST_DRIVE_SPEED, -7, -7, 2.0);
             encoderDrive(FAST_DRIVE_SPEED, 7, 7, 2.0);
 
             // rotate to unhook
-            rotate(-12, TURN_SPEED);
+            rotate(-12, TURN_FAST);
 
             // lower elevator
             leftElevatorMotor.setPosition(0);
@@ -165,7 +163,7 @@ public class silverAutonomousOpMode extends LinearOpMode
             sleep(500);
 
             // rotate to face wall
-            rotate(-44, TURN_SPEED);
+            rotate(-44, TURN_SLOW);
             sleep(500);
 
             // drive to wall
@@ -173,7 +171,7 @@ public class silverAutonomousOpMode extends LinearOpMode
             sleep(500);
 
             // rotate to face depot
-            rotate(-50, TURN_SPEED);
+            rotate(-50, TURN_SLOW);
             sleep(500);
 
             // drive to depot
@@ -314,61 +312,12 @@ public class silverAutonomousOpMode extends LinearOpMode
     }
 
     /**
-     * Method to drive robot in a straight line, based on encoder counts
+     * Drive based on encoder counts
+     * @param speed speed to drive
+     * @param leftInches how far to drive the left motor
+     * @param rightInches how far to drive the right motor
+     * @param timeoutS how long to run the command in case of failure
      */
-    private void driveGyro(double speed, double distance)
-    {
-        int     newLeftTarget;
-        int     newRightTarget;
-        int     moveCounts;
-
-        // restart imu movement tracking.
-        resetAngle();
-
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            moveCounts = (int)(distance * COUNTS_PER_INCH);
-            newLeftTarget = leftMotor.getCurrentPosition() + moveCounts;
-            newRightTarget = rightMotor.getCurrentPosition() + moveCounts;
-
-            // Set Target and Turn On RUN_TO_POSITION
-            leftMotor.setTargetPosition(newLeftTarget);
-            rightMotor.setTargetPosition(newRightTarget);
-
-            leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // start motion.
-            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            leftMotor.setPower(speed*.5);
-            rightMotor.setPower(speed*.5);
-
-            // keep looping while we are still active, and BOTH motors are running.
-            while (opModeIsActive() && (leftMotor.isBusy() && rightMotor.isBusy())) {
-
-                // Use gyro to drive in a straight line.
-                correction = checkDirection();
-
-                // if driving in reverse, the motor correction also needs to be reversed
-                if (distance < 0)
-                    correction *= -1.0;
-
-                leftMotor.setPower(speed + correction);
-                rightMotor.setPower(speed - correction);
-            }
-
-            // Stop all motion;
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-    }
-
     public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS)
     {
         int newLeftTarget;
