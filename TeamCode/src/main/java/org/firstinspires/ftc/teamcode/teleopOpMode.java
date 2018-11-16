@@ -75,11 +75,11 @@ public class teleopOpMode extends LinearOpMode {
             rightMotor.setPower(rightPower);
 
             // arm is controlled by the gamepad2 triggers
-            armPower = gamepad2.right_trigger * .75;
+            armPower = gamepad2.right_trigger * .65;
 
             // if the left trigger is pressed, reverse
             if (gamepad2.left_trigger != 0.0 && gamepad2.right_trigger == 0.0) {
-                armPower = -gamepad2.left_trigger * .75;
+                armPower = -gamepad2.left_trigger * .65;
             }
             armMotor.setPower(armPower);
 

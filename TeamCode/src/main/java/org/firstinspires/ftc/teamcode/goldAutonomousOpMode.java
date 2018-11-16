@@ -49,8 +49,8 @@ public class goldAutonomousOpMode extends LinearOpMode
     // The can/should be tweaked to suite the specific robot drive train.
     static final double     FAST_DRIVE_SPEED        = 1.0;
     static final double     MEDIUM_DRIVE_SPEED      = .75;
-    static final double     SLOW_DRIVE_SPEED        = .2;
-    static final double     TURN_SLOW               = 0.5;
+    static final double     SLOW_DRIVE_SPEED        = .1;
+    static final double     TURN_SLOW               = 0.4;
     static final double     TURN_FAST               = 0.75;
 
     // called when init button is  pressed.
@@ -80,8 +80,8 @@ public class goldAutonomousOpMode extends LinearOpMode
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // brake motors
-        //leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // set digital channels to input mode.
@@ -143,16 +143,20 @@ public class goldAutonomousOpMode extends LinearOpMode
             // lower robot
             leftElevatorMotor.setPosition(1.0);
             rightElevatorMotor.setPosition(0);
-            sleep(600);
+            sleep(850);
             leftElevatorMotor.setPosition(0.5);
             rightElevatorMotor.setPosition(0.5);
             sleep(1000);
 
-            encoderDrive(FAST_DRIVE_SPEED, -7, -7, 2.0);
-            encoderDrive(FAST_DRIVE_SPEED, 7, 7, 2.0);
+            encoderDrive(FAST_DRIVE_SPEED, -9, -9, 2.0);
+            encoderDrive(FAST_DRIVE_SPEED, 9, 9, 2.0);
 
             // rotate to unhook
             rotate(-12, TURN_FAST);
+
+            // rotate to face wall
+            rotate(-39, TURN_SLOW);
+            sleep(500);
 
             // lower elevator
             leftElevatorMotor.setPosition(0);
@@ -162,16 +166,12 @@ public class goldAutonomousOpMode extends LinearOpMode
             rightElevatorMotor.setPosition(0.5);
             sleep(500);
 
-            // rotate to face wall
-            rotate(-45, TURN_SLOW);
-            sleep(500);
-
             // drive to wall
-            encoderDrive(SLOW_DRIVE_SPEED, -30, -30, 4.0);
+            encoderDrive(SLOW_DRIVE_SPEED, -56, -56, 4.0);
             sleep(500);
 
             // rotate to face depot
-            rotate(65, TURN_SLOW);
+            rotate(63, TURN_SLOW);
             sleep(500);
 
             // drive to depot
@@ -184,7 +184,7 @@ public class goldAutonomousOpMode extends LinearOpMode
             markerServo.setPosition(0.5);
 
             // drive to park
-            encoderDrive(SLOW_DRIVE_SPEED, -47, -47, 6.0);
+            encoderDrive(SLOW_DRIVE_SPEED, -57, -57, 6.0);
             sleep(500);
 
             // sit pretty
